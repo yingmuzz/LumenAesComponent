@@ -12,7 +12,7 @@ namespace YingMuzZ\LumenAesComponent;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
-class OpensslAesServiceProvider extends ServiceProvider
+class AesServiceProvider extends ServiceProvider
 {
     public function register()
     {
