@@ -32,6 +32,12 @@ class LumenAesTool
     protected $iv;
 
     /**
+     * 向量随机字符串。
+     * @var string
+     */
+    protected $iv_hash;
+
+    /**
      * 向量长度。
      * @var int
      */
@@ -71,16 +77,8 @@ class LumenAesTool
         }
         //加密字符串并使用base64编码
         $s_hash = base64_encode(openssl_encrypt($data, $this->method, $this->key, OPENSSL_RAW_DATA, $this->iv));
-        //加入验签盐值
-        $s_salt = sha1($this->iv . $s_hash . $this->key);
-        //偏移字符串（随机）
-        $s_offset_str = sha1(uniqid(true) . $this->iv . $this->key . microtime(true));
-        //生成偏移开始字符串
-        $s_offset_start = substr($s_offset_str, strlen($s_offset_str) - $this->offset - 1, $this->offset);
-        //生成偏移结束字符串
-        $s_offset_end = substr(sha1($this->iv . microtime(true) . uniqid(true)), 0, strlen($s_offset_str) - $this->offset);
 
-        return $s_offset_end . $this->iv . $s_salt . $s_offset_start . $s_hash;
+        return $this->iv_hash . $s_hash;
     }
 
     /**
@@ -128,8 +126,8 @@ class LumenAesTool
         $this->iv_length = $iv_length;
         //生成随机字符串
         $s_hash = sha1(microtime(true) . $this->key . uniqid(true));
-        //从随机字符串中取出向量
-        $s_iv = substr($s_hash, rand(2, 20), $iv_length);
+        $this->iv_hash = $s_hash;
+        $s_iv = substr($s_hash, $this->offset, $iv_length);
         if (strlen($s_iv) != $iv_length) {
             throw new \Exception("向量长度不匹配！~");
         }
