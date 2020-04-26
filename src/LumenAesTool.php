@@ -122,7 +122,7 @@ class LumenAesTool
         }
         //获取向量字符串长度
         $iv_length = openssl_cipher_iv_length($this->method);
-        if (false == $method_iv_length || 0 >= $method_iv_length || 16 < $method_iv_length) {
+        if (false == $iv_length || 0 >= $iv_length || 16 < $iv_length) {
             throw new \Exception("向量长度获取失败！~");
         }
         $this->iv_length = $iv_length;
