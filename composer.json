@@ -1,0 +1,27 @@
+{
+    "name": "yingmuzz/lumenaes",
+    "description": "Lumen Aes Component",
+    "keywords": [
+        "Lumen", "AES", "CBC"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "YingMuzZ",
+            "email": "huadyingmu@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.7",
+        "mockery/mockery": "0.9.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "YingMuzZ\\LumenAesComponent\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
