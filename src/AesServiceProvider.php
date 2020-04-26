@@ -20,8 +20,8 @@ class AesServiceProvider extends ServiceProvider
             $s_path = parse_url($_SERVER['REQUEST_URI'])['path'];
             $a_urls = explode('/', $s_path);
             $s_version = (isset($a_urls[1]) && $a_urls[1] != '') ? $a_urls[1] : '';
-            $a_versions = Config::get('lumenaes');
-            if ('' == $s_version || !count($a_versions) || !isset($a_versions[$s_version])) {
+            $a_versions = Config::get('aes');
+            if ('' == $s_version || !isset($a_versions[$s_version])) {
                 throw new \Exception('路由异常！~');
             }
 
