@@ -9,6 +9,7 @@
 
 namespace YingMuzZ\LumenAesComponent;
 
+use Log;
 use Illuminate\Support\Facades\Config;
 
 class LumenAesTool
@@ -88,17 +89,18 @@ class LumenAesTool
      */
     public function aesAppDecrypt(string $hash = '')
     {
-        //去除首混淆字符。
-        $s_new_hash = substr($hash, 40 - $this->offset);
         //获取向量
-        $this->iv = substr($s_new_hash, 0, $this->iv_length);
+        $this->iv = substr($hash, $this->offset, $this->iv_length);
+        Log::debug('AES IV:' . $this->iv);
         if (strlen($this->iv) != $this->iv_length) {
             throw new \Exception("向量长度验证失败!~");
         }
         //获取固定40位的盐
-        $s_salt = substr($s_new_hash, $this->iv_length, 40);
+        $s_salt = substr($hash, 40, 40);
+        Log::debug('AES SALT:' . $s_salt);
         //获取解密之前的字符串
-        $s_hash_data = substr($s_new_hash, $this->iv_length + 40 + $this->offset);
+        $s_hash_data = substr($hash, 80);
+        Log::debug('AES HASH:' . $s_hash_data);
         //验证签名
         if (sha1($this->iv . $s_hash_data . $this->key) != $s_salt) {
             throw new \Exception("签名校验失败!~");
