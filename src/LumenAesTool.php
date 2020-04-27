@@ -71,10 +71,10 @@ class LumenAesTool
         } elseif (!isset($a_aes_config['offset']) || ((int) $a_aes_config['offset']) <= 0 || ((int) $a_aes_config['offset']) >= 24) {
             throw new \Exception('偏移量配置错误！~');
         }
+        $this->offset = (int) $a_aes_config['offset'];
         $this->key = $a_aes_config['key'];
         $this->method = $a_aes_config['method'];
         $this->iv = $this->generateIV();
-        $this->offset = (int) $a_aes_config['offset'];
     }
 
     /**
@@ -147,8 +147,11 @@ class LumenAesTool
         $this->iv_length = $iv_length;
         //生成随机字符串
         $s_hash = sha1(microtime(true) . $this->key . uniqid(true));
+        Log::debug('hash:' . $s_hash);
+        Log::debug('offset:' . $this->offset);
         $this->iv_hash = $s_hash;
         $s_iv = substr($s_hash, $this->offset, $iv_length);
+        Log::debug('iv:' . $s_iv);
         if (strlen($s_iv) != $iv_length) {
             throw new \Exception("向量长度不匹配！~");
         }
