@@ -9,11 +9,22 @@
 
 namespace YingMuzZ\LumenAesComponent;
 
-use Log;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
 
 class LumenAesTool
 {
+    /**
+     * redis防止重放攻击的键名。
+     */
+    const REPLAY_ATTACK_KEYS = 'replay_attack_keys:';
+
+    /**
+     * 防止重放攻击的时间；秒。
+     */
+    const LIMIT_TIME = 300;
+
     /**
      * 加密算法。
      * @var string
@@ -105,6 +116,14 @@ class LumenAesTool
         if (sha1($this->iv . $s_hash_data . $this->key) != $s_salt) {
             throw new \Exception("签名校验失败!~");
         }
+        //防止重放攻击;设置盐值30分钟内唯一
+        $b_flag = Redis::exists(static::REPLAY_ATTACK_KEYS . $s_salt);
+        if (true == $b_flag) {
+            throw new \Exception("重复请求!~");
+        }
+        Redis::set(static::REPLAY_ATTACK_KEYS . $s_salt, 1);
+        Redis::expire(static::REPLAY_ATTACK_KEYS . $s_salt, static::LIMIT_TIME);
+
         //解密数据
         $s_data = openssl_decrypt(base64_decode($s_hash_data), $this->method, $this->key, OPENSSL_RAW_DATA, $this->iv);
 
