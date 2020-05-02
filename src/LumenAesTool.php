@@ -87,6 +87,7 @@ class LumenAesTool
         if ('' == $data) {
             throw new \Exception("待加密字符串错误！~");
         }
+        $this->iv = $this->generateIV();
         //加密字符串并使用base64编码
         $s_hash = base64_encode(openssl_encrypt($data, $this->method, $this->key, OPENSSL_RAW_DATA, $this->iv));
 
