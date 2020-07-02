@@ -95,6 +95,22 @@ class LumenAesTool
     }
 
     /**
+     * 解密。
+     * @param  string $hash 加密字符
+     * @return mixed
+     */
+    public function aesDecrypt(string $hash = '')
+    {
+        $this->iv = $this->generateIV();
+        $s_iv = substr($hash, $this->offset, $this->iv_length);
+        //解密数据
+        $s_hash_data = substr($hash, 40);
+        $s_data = openssl_decrypt(base64_decode($s_hash_data), $this->method, $this->key, OPENSSL_RAW_DATA, $s_iv);
+
+        return $s_data;
+    }
+
+    /**
      * hash解密方法。
      * @param string $hash Hash值
      * @return mixed
